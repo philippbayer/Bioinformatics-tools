@@ -16,28 +16,41 @@ import os, argparse
 
 # build the parser, only one argument (file-directory)
 parser = argparse.ArgumentParser(description='Converts all Genbank-files in the given directory to fasta-files. Leaves original files intact.')
-parser.add_argument('-d', help='The directory in which the Genbank-files are located.')
+parser.add_argument('dir', help='The directory in which the Genbank-files are located.')
 
 args = parser.parse_args()
 
-# go through all elements of the directory given,
-# convert the ones ending in .gb
-counter = 0
-for element in os.listdir(vars(args)['d']):
-    # if the lower-case version of an element ends in
-    # .gb it's probably a Genbank-file
-    if element.lower().endswith(".gb"):
+# go through all elements of the directory given
+
+for element in os.listdir(vars(args)['dir']):
+    if os.path.isfile(element):
+
         # open input/output-files
         file_handle = open(element)
-        output_handle =  open(element.replace(".gb", ".fasta"), "w")
-        # parse input and write to output
-        for seq_record in SeqIO.parse(file_handle, "genbank"):
-            output_handle.write(">%s %s\n%s\n" % (
-                seq_record.id,
-                seq_record.description,
-                seq_record.seq))
-        output_handle.close()
-        file_handle.close()
-        counter += 1
 
-print "Done! Converted " + str(counter) + " files to fasta-format."
+        # parse through the file, collect all Genbank-items
+        # (if they exist)
+        seq_elements = []
+        for seq in SeqIO.parse(file_handle, "genbank"):
+            seq_elements.append(seq)
+
+        file_handle.close()
+
+        # is the file we parsed a Genbank-file?
+        if len(seq_elements) != 0:
+            # (re)name the file to fasta
+            if "." in element:
+                filename = element[:element.find(".")] + ".fasta"
+            else:
+                filename = element + ".fasta"
+
+            # open output
+            output_handle =  open(filename, "w")
+            # iterate over all genbank-items
+            for seq in seq_elements:
+                output_handle.write(">%s %s\n%s\n" % (
+                    seq.id,
+                    seq.description,
+                    seq.seq))
+            output_handle.close()
+
