@@ -1,0 +1,3 @@
+Just what the description says.
+
+GenbankToFasta.py - Uses Biopython to go over files in  a directory and convert their copies from the Genbank-format to Fasta-format.
