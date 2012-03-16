@@ -40,7 +40,7 @@ for element in os.listdir(vars(args)['dir']):
         if len(seq_elements) != 0:
             # (re)name the file to fasta
             if "." in element:
-                filename = element[:element.find(".")] + ".fasta"
+                filename = element[:element.rindex(".")] + ".fasta"
             else:
                 filename = element + ".fasta"
 
