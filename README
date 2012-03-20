@@ -1,3 +1,5 @@
 Just what the description says.
 
 GenbankToFasta.py - Uses Biopython to go over files in  a directory and convert their copies from the Genbank-format to Fasta-format.
+
+SequenceLengthHistogram.py - Very basic parser which uses BioPython and R to plot a histogram of the sequences in a fasta-file.
